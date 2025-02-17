@@ -1,0 +1,24 @@
+{
+  "name": "remo_mp_bot",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.ts"
+  },
+  "author": {
+    "name": "Mahmoud Khaled"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Mahmoud-Khaled-FS/remo_mp_bot"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "remo_mp_bot": "file:"
+  }
+}
