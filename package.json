@@ -19,6 +19,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "remo_mp_bot": "file:"
+    "remo_mp_bot": "file:",
+    "zod": "^3.24.2"
   }
 }
