@@ -1,5 +1,5 @@
-import { Plugin, type PluginInitializer } from '../../engine/plugin';
-import { info } from '../../utils/logger';
+import { Plugin, type PluginInitializer } from '../../src/engine/plugin';
+import { info } from '../../src/utils/logger';
 import AddPlaylistCommand from './commands/add_playlist';
 import SuggestMusicCommand from './commands/suggest_music';
 

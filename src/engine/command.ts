@@ -1,10 +1,10 @@
 export interface CommandData {
   plugin: string;
   name: string;
-  args: Argument[];
+  args: EngineArgument[];
 }
 
-export interface Argument {
+export interface EngineArgument {
   name?: string;
   value: string;
 }
@@ -12,5 +12,5 @@ export interface Argument {
 export interface Command<T extends Record<string, string> = {}> {
   help(): string;
   exec(args: T): string | void;
-  validateArgs(args: string[]): T;
+  validateArgs(args: EngineArgument[]): T;
 }

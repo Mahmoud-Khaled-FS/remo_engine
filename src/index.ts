@@ -1,14 +1,13 @@
 import Engine from './engine';
-import MusicPlugin from './plugins/music';
+import { info } from './utils/logger';
 
-function main(): number {
+async function main() {
   const engine = new Engine();
-  engine.subscribe(new MusicPlugin());
-  engine.run(`remo music add playlist
-    name=sad
-    url=https://google.com
+  await engine.registerPlugin('echo');
+  const output = await engine.executeCommand(`remo echo print
+    text=hello world
     `);
-  return 0;
+  info(`Command exec successfully! output: "${output}"`);
 }
 
-process.exit(main());
+main();
