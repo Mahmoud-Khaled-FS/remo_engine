@@ -29,12 +29,15 @@ class Engine {
     if (!plugin) {
       throw new Error(`Plugin "${commandData.plugin}" not found!`);
     }
-    const command = plugin.getCommand(commandData.name);
-    if (!command) {
+    const CommandConstructor = plugin.getCommand(commandData.name);
+    if (!CommandConstructor) {
       throw new Error(`Command "${commandData.name}" not found in plugin "${commandData.plugin}"`);
     }
-    // TODO (MAHMOUD) - Add command args validation
-    const args = await command.validateArgs(commandData.args);
+    const command = new CommandConstructor();
+    if (commandData.args[0].value === '.help') {
+      return this.printUsage(commandData, command.help());
+    }
+    const args = command.validateArgs(commandData.args);
     return await command.exec(args);
   }
 
@@ -87,6 +90,10 @@ class Engine {
       args: args,
     };
     return parsedCommand;
+  }
+
+  private printUsage(commandData: CommandData, argsHelper: string[]): string {
+    return `Usage: ${BOT_NAME} ${commandData.plugin} ${commandData.name}\n${argsHelper.join('\n')}`;
   }
 }
 

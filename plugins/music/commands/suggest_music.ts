@@ -1,4 +1,4 @@
-import type { Command } from '../../../engine/command';
+import type { Command, EngineArgument } from '../../../src/engine/command';
 
 type CommandArgs = {};
 
@@ -10,7 +10,7 @@ class SuggestMusicCommand implements Command<CommandArgs> {
   help(): string {
     return 'suggest music help to get music!';
   }
-  validateArgs(args: string[]): CommandArgs {
+  validateArgs(args: EngineArgument[]): CommandArgs | Promise<CommandArgs> {
     return {};
   }
 }

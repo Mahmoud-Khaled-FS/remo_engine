@@ -1,25 +1,18 @@
-import type { Command } from '../../../engine/command';
+import type { Command, EngineArgument } from '../../../src/engine/command';
 
-type CommandArgs = {
-  playlist: string;
-  url: string;
-};
+type CommandArgs = {};
 
-class AddPlaylistCommand implements Command<CommandArgs> {
-  exec(args: CommandArgs): string {
-    console.log(`(${args.playlist})[${args.url}]`);
+class SuggestMusicCommand implements Command<CommandArgs> {
+  exec(args: unknown): string {
     return 'music';
   }
 
   help(): string {
-    return 'add playlist to DB';
+    return 'suggest music help to get music!';
   }
-  validateArgs(args: string[]): CommandArgs {
-    return {
-      playlist: args[0],
-      url: args[1],
-    };
+  validateArgs(args: EngineArgument[]): CommandArgs | Promise<CommandArgs> {
+    return {};
   }
 }
 
-export default AddPlaylistCommand;
+export default SuggestMusicCommand;
