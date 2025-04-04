@@ -4,6 +4,7 @@ import { info } from '../../src/utils/logger';
 import { z } from 'zod';
 
 class EchoPlugin extends Plugin {
+  defaultCommand: string = 'print';
   init(): PluginInitializer {
     info('Echo plugin init!');
     this.addCommand('print', PrintCommand);
