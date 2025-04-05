@@ -4,6 +4,7 @@
     "": {
       "name": "remo_mp_bot",
       "dependencies": {
+        "colors": "^1.4.0",
         "remo_mp_bot": "file:",
         "zod": "^3.24.2",
       },
@@ -23,6 +24,8 @@
     "@types/ws": ["@types/ws@8.5.14", "", { "dependencies": { "@types/node": "*" } }, "sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw=="],
 
     "bun-types": ["bun-types@1.2.7", "", { "dependencies": { "@types/node": "*", "@types/ws": "*" } }, "sha512-P4hHhk7kjF99acXqKvltyuMQ2kf/rzIw3ylEDpCxDS9Xa0X0Yp/gJu/vDCucmWpiur5qJ0lwB2bWzOXa2GlHqA=="],
+
+    "colors": ["colors@1.4.0", "", {}, "sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA=="],
 
     "remo_mp_bot": ["remo_mp_bot@file:", { "dependencies": { "remo_mp_bot": "file:", "zod": "^3.24.2" }, "devDependencies": { "@types/bun": "latest" }, "peerDependencies": { "typescript": "^5.7.3" } }],
 

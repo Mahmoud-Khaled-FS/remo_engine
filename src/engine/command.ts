@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import AppError from '../utils/error';
 
 export interface CommandData {
   plugin: string;
@@ -39,19 +40,19 @@ export abstract class Command<T extends Record<string, string> = {}> {
     for (const index in args) {
       if (args[index].name) {
         if (data[args[index].name]) {
-          throw new Error('Invalid args arrange can not have same arg name');
+          throw new AppError('Invalid args arrange can not have same arg name');
         }
         data[args[index].name] = args[index].value;
       } else {
         if (+index >= this.args.length) {
-          throw new Error('Invalid args arrange');
+          throw new AppError('Invalid args arrange');
         }
         data[this.args[index].name] = args[index].value;
       }
     }
     const validatedArgs = z.object(zodSchema).safeParse(data);
     if (!validatedArgs.success) {
-      throw new Error(validatedArgs.error.message);
+      throw new AppError(validatedArgs.error.message);
     }
     return validatedArgs.data as T;
   }

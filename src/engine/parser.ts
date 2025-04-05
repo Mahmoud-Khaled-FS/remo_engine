@@ -1,4 +1,5 @@
 import { BOT_NAME } from '../constant';
+import AppError from '../utils/error';
 import { trimList } from '../utils/strings';
 
 class Parser {
@@ -6,7 +7,7 @@ class Parser {
   public parse(commandString: string): Token[] {
     const lines = trimList(commandString.split('\n'));
     if (lines.length === 0) {
-      throw new Error('Syntax Error! Command is empty.');
+      throw new AppError('Syntax Error! Command is empty.', 'SYNTAX_ERROR');
     }
     let index = 0;
     this.parseCommandMetadata(lines[index++]);
@@ -31,10 +32,10 @@ class Parser {
   private parseCommandMetadata(line: string) {
     const words = line.split(/\s+/);
     if (words.length < 2) {
-      throw new Error('Syntax Error! Missing required arguments.');
+      throw new AppError('Syntax Error! Missing required arguments.');
     }
     if (words[0] !== BOT_NAME) {
-      throw new Error('Syntax Error! Invalid bot name.');
+      throw new AppError('Syntax Error! Invalid bot name.');
     }
     this.tokens.push({ type: TokenType.BOT_NAME });
     this.tokens.push({ type: TokenType.PLUG_NAME, value: words[1] });
@@ -54,7 +55,7 @@ class Parser {
         continue;
       }
       if (isStartNamed) {
-        throw new Error(`Syntax Error!  Unnamed argument found after named arguments: "${line}"`);
+        throw new AppError(`Syntax Error!  Unnamed argument found after named arguments: "${line}"`);
       }
       this.tokens.push({ type: TokenType.ARG_VALUE, value: line });
     }

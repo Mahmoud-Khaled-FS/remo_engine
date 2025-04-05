@@ -6,6 +6,7 @@ import * as path from 'node:path';
 import type { EngineArgument, Command, CommandData } from './command';
 import Parser, { TokenType } from './parser';
 import type { Plugin } from './plugin';
+import AppError from '../utils/error';
 
 class Engine {
   private readonly plugins: Map<string, Plugin> = new Map();
@@ -13,12 +14,12 @@ class Engine {
   public async registerPlugin(name: string) {
     const plugin = await this.importDynamicPlugin(name);
     if (!plugin) {
-      throw new Error(`Can not import dynamic plugin ${plugin}`);
+      throw new AppError(`Can not import dynamic plugin ${plugin}`, 'PLUGIN_NOT_FOUND', false);
     }
     const initData = await plugin.init();
     if (this.plugins.has(initData.name)) {
       // TODO (MAHMOUD) - Create App Error!
-      throw new Error(`There is another plugin under name ${initData.name}`);
+      throw new AppError(`There is another plugin under name ${initData.name}`, 'PLUGIN_CONFLICT', false);
     }
     this.plugins.set(initData.name, plugin);
   }
@@ -27,11 +28,11 @@ class Engine {
     const commandData = this.prepareCommand(commandString);
     const plugin = this.plugins.get(commandData.plugin);
     if (!plugin) {
-      throw new Error(`Plugin "${commandData.plugin}" not found!`);
+      throw new AppError(`Plugin "${commandData.plugin}" not found!`);
     }
     const CommandConstructor = plugin.getCommand(commandData.name);
     if (!CommandConstructor) {
-      throw new Error(`Command "${commandData.name}" not found in plugin "${commandData.plugin}"`);
+      throw new AppError(`Command "${commandData.name}" not found in plugin "${commandData.plugin}"`);
     }
     const command = new CommandConstructor();
     if (commandData.args[0].value === '.help') {

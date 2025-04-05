@@ -1,12 +1,14 @@
+import colors from 'colors';
+
 export function info(message: any) {
-  printLog('INFO', message);
+  printLog(colors.green('INFO'), message);
 }
 
 export function warn(message: any) {
-  printLog('WARN', message);
+  printLog(colors.yellow('WARN'), message);
 }
 export function error(message: any) {
-  printLog('ERROR', message);
+  printLog(colors.red('ERROR'), message);
 }
 
 function printLog(level: string, message: any) {

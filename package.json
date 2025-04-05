@@ -19,6 +19,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "colors": "^1.4.0",
     "remo_mp_bot": "file:",
     "zod": "^3.24.2"
   }
