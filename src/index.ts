@@ -3,7 +3,7 @@ import FileAdapter from './adapter/file';
 import TelegramAdapter from './adapter/telegram';
 import Engine from './engine';
 import { exit } from './utils/exit';
-import { error, info } from './utils/logger';
+import { error } from './utils/logger';
 
 async function main(argv: string[]) {
   if (argv.length < 3) {
@@ -15,6 +15,7 @@ async function main(argv: string[]) {
   await engine.registerPlugin('echo');
   await engine.registerPlugin('memes');
   await engine.registerPlugin('pc');
+  await engine.registerPlugin('whatsapp');
 
   let adapter: Adapter;
   switch (argv[2]) {
