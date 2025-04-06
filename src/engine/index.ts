@@ -1,5 +1,5 @@
 import { BOT_NAME } from '../constant';
-import { error } from '../utils/logger';
+import { error, info } from '../utils/logger';
 import { trimList } from '../utils/strings';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -35,7 +35,7 @@ class Engine {
       throw new AppError(`Command "${commandData.name}" not found in plugin "${commandData.plugin}"`);
     }
     const command = new CommandConstructor();
-    if (commandData.args[0].value === '.help') {
+    if (commandData.args.length > 0 && commandData.args[0].value === '.help') {
       return this.printUsage(commandData, command.help());
     }
     const args = command.validateArgs(commandData.args);
@@ -56,6 +56,7 @@ class Engine {
       if (!pluginFile) {
         return null;
       }
+      info(`[${name}] plugin init!`);
       return new pluginFile.default();
     } catch (error) {
       return null;

@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
+    "grammy": "^1.35.1",
     "remo_mp_bot": "file:",
     "zod": "^3.24.2"
   }

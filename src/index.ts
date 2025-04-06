@@ -1,5 +1,6 @@
 import type { Adapter } from './adapter/adapter';
 import FileAdapter from './adapter/file';
+import TelegramAdapter from './adapter/telegram';
 import Engine from './engine';
 import { exit } from './utils/exit';
 import { error, info } from './utils/logger';
@@ -12,6 +13,8 @@ async function main(argv: string[]) {
   // Easy to setup different plugins based on adapter
   const engine = new Engine();
   await engine.registerPlugin('echo');
+  await engine.registerPlugin('memes');
+  await engine.registerPlugin('pc');
 
   let adapter: Adapter;
   switch (argv[2]) {
@@ -20,6 +23,10 @@ async function main(argv: string[]) {
         exit('There is no remo file to execute!');
       }
       adapter = new FileAdapter(engine, argv.slice(3));
+      break;
+    }
+    case 'telegram': {
+      adapter = new TelegramAdapter(engine, argv.slice(3));
       break;
     }
     default: {

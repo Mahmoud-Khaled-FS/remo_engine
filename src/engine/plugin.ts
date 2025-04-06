@@ -1,6 +1,6 @@
 import type { Command } from './command';
 
-type CommandConstructor<T extends Record<string, string> = {}> = { new (...args: any): Command<T> };
+type CommandConstructor = { new (...args: any): Command<any> };
 
 export abstract class Plugin {
   protected abstract defaultCommand?: string;

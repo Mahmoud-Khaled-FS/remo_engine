@@ -26,12 +26,15 @@ export type Arg = {
 
 export type Args = Arg[];
 
-export abstract class Command<T extends Record<string, string> = {}> {
-  abstract args: Args;
+export abstract class Command<T extends Record<string, string> | null = null> {
+  args?: Args | null;
 
   abstract exec(args: T): string | void | Promise<string> | Promise<void>;
 
   public validateArgs(args: EngineArgument[]): T {
+    if (!this.args || this.args.length === 0) {
+      return {} as T;
+    }
     const zodSchema: any = {};
     for (const index in this.args) {
       zodSchema[this.args[index].name] = this.args[index].validation ?? z.string().optional();
@@ -59,6 +62,9 @@ export abstract class Command<T extends Record<string, string> = {}> {
 
   help(): string[] {
     let helpMessages: string[] = [];
+    if (!this.args) {
+      return helpMessages;
+    }
     for (const arg of this.args) {
       helpMessages.push(`${arg.name}= ${arg.description ?? ''}`);
     }
