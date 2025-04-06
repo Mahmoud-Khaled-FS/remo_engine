@@ -1,4 +1,6 @@
-# remo_mp_bot
+# Remo
+
+![logo](https://github.com/Mahmoud-Khaled-FS/remo_mp_bot/blob/main/assets/logo.png?raw=true)
 
 To install dependencies:
 
