@@ -1,6 +1,7 @@
 import { Plugin, type PluginInitializer } from '../../src/engine/plugin';
 import { Command, type Args, type EngineArgument } from '../../src/engine/command';
 import { z } from 'zod';
+import type { EngineContext } from '../../src/engine/Context';
 
 class EchoPlugin extends Plugin {
   defaultCommand: string = 'print';
@@ -25,7 +26,7 @@ class PrintCommand extends Command<{
     },
   ];
 
-  exec(args: { text: string }) {
-    return args.text;
+  async exec(ctx: EngineContext, args: { text: string }) {
+    await ctx.text(args.text);
   }
 }

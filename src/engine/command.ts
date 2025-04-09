@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import AppError from '../utils/error';
+import type { EngineContext } from './Context';
 
 export interface CommandData {
   plugin: string;
@@ -29,7 +30,7 @@ export type Args = Arg[];
 export abstract class Command<T extends Record<string, string> | null = null> {
   args?: Args | null;
 
-  abstract exec(args: T): string | void | Promise<string> | Promise<void>;
+  abstract exec(ctx: EngineContext, args: T): string | void | Promise<string> | Promise<void>;
 
   public validateArgs(args: EngineArgument[]): T {
     if (!this.args || this.args.length === 0) {

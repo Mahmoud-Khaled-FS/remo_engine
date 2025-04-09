@@ -1,11 +1,9 @@
-import * as cp from 'child_process';
-import { promisify } from 'util';
-const exec = promisify(cp.exec);
-
 import { Command } from '../../../src/engine/command';
+import type { EngineContext } from '../../../src/engine/Context';
+import { exec } from '../../../src/utils/childProcess';
 
 class InfoCommand extends Command {
-  async exec() {
+  async exec(ctx: EngineContext) {
     const { stdout } = await exec('systeminfo');
     const lines = stdout
       .split('\n')
@@ -21,7 +19,7 @@ class InfoCommand extends Command {
       'Time Zone: ' + info['Time Zone'],
       `RAM: ${info['Available Physical Memory']}/${info['Total Physical Memory']}`,
     ];
-    return result.join('\n');
+    ctx.text(result.join('\n'));
   }
 }
 

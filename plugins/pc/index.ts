@@ -1,5 +1,6 @@
 import { Plugin, type PluginInitializer } from '../../src/engine/plugin';
 import InfoCommand from './commands/info';
+import ScreenshotCommand from './commands/screenshot';
 import ShutdownCommand from './commands/shutdown';
 
 class PcPlugin extends Plugin {
@@ -8,6 +9,7 @@ class PcPlugin extends Plugin {
   init(): PluginInitializer {
     this.addCommand('info', InfoCommand);
     this.addCommand('shutdown', ShutdownCommand);
+    this.addCommand('screenshot', ScreenshotCommand);
     return {
       name: 'pc',
     };

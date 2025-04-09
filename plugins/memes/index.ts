@@ -1,6 +1,7 @@
 import { Plugin, type PluginInitializer } from '../../src/engine/plugin';
 import { Command, type Args } from '../../src/engine/command';
 import { info } from '../../src/utils/logger';
+import type { EngineContext } from '../../src/engine/Context';
 
 class MemesPlugin extends Plugin {
   defaultCommand: string = 'urmom';
@@ -17,7 +18,7 @@ export default MemesPlugin;
 
 class UrmomCommand extends Command {
   args: Args = [];
-  exec() {
-    return 'urmom';
+  async exec(ctx: EngineContext) {
+    ctx.text('Urmom');
   }
 }

@@ -1,13 +1,11 @@
-import * as cp from 'child_process';
-import { promisify } from 'util';
-const exec = promisify(cp.exec);
-
 import { Command } from '../../../src/engine/command';
+import type { EngineContext } from '../../../src/engine/Context';
+import { exec } from '../../../src/utils/childProcess';
 
 class ShutdownCommand extends Command {
-  async exec() {
+  async exec(ctx: EngineContext) {
     exec(`powershell shutdown /s`);
-    return 'Goodbye!';
+    ctx.text('Goodbye!');
   }
 }
 

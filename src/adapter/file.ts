@@ -2,6 +2,17 @@ import * as fs from 'node:fs';
 import AppError from '../utils/error';
 import { exit } from '../utils/exit';
 import { Adapter } from './adapter';
+import type { EngineContext } from '../engine/Context';
+
+class FileContext implements EngineContext {
+  async file(path: string, type?: string): Promise<void> {
+    console.log(`file: ${path}`);
+  }
+
+  async text(text: string): Promise<void> {
+    console.log(text);
+  }
+}
 
 class FileAdapter extends Adapter {
   async run(): Promise<void> {
@@ -16,8 +27,8 @@ class FileAdapter extends Adapter {
         exit(`invalid file! path:"${this.argv[0]}"`);
       }
       const commandFile = await Bun.file(this.argv[0]).text();
-
-      const output = await this.engine.executeCommand(commandFile);
+      const engineCtx = new FileContext();
+      const output = await this.engine.executeCommand(commandFile, engineCtx);
       console.log(output);
     } catch (err) {
       if (err instanceof AppError) {

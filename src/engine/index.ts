@@ -7,6 +7,7 @@ import type { EngineArgument, Command, CommandData } from './command';
 import Parser, { TokenType } from './parser';
 import type { Plugin } from './plugin';
 import AppError from '../utils/error';
+import type { EngineContext } from './Context';
 
 class Engine {
   private readonly plugins: Map<string, Plugin> = new Map();
@@ -24,7 +25,7 @@ class Engine {
     this.plugins.set(initData.name, plugin);
   }
 
-  public async executeCommand(commandString: string) {
+  public async executeCommand(commandString: string, ctx: EngineContext) {
     const commandData = this.prepareCommand(commandString);
     const plugin = this.plugins.get(commandData.plugin);
     if (!plugin) {
@@ -39,7 +40,7 @@ class Engine {
       return this.printUsage(commandData, command.help());
     }
     const args = command.validateArgs(commandData.args);
-    return await command.exec(args);
+    return await command.exec(ctx, args);
   }
 
   private async importDynamicPlugin(name: string): Promise<Plugin | null> {
