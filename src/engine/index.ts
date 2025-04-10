@@ -5,28 +5,38 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { EngineArgument, Command, CommandData } from './command';
 import Parser, { TokenType } from './parser';
-import type { Plugin } from './plugin';
+import { CorePlugin, Plugin } from './plugin';
 import AppError from '../utils/error';
 import type { EngineContext } from './Context';
 
 class Engine {
+  public constructor() {
+    this.registerPlugin(new CorePlugin());
+  }
   private readonly plugins: Map<string, Plugin> = new Map();
 
-  public async registerPlugin(name: string) {
-    const plugin = await this.importDynamicPlugin(name);
+  public async registerPlugin(name: string | Plugin) {
+    let plugin: Plugin | null;
+    if (name instanceof Plugin) {
+      plugin = name;
+    } else {
+      plugin = await this.importDynamicPlugin(name);
+    }
     if (!plugin) {
       throw new AppError(`Can not import dynamic plugin ${plugin}`, 'PLUGIN_NOT_FOUND', false);
     }
-    const initData = await plugin.init();
-    if (this.plugins.has(initData.name)) {
+    await plugin.init();
+    if (this.plugins.has(plugin.name)) {
       // TODO (MAHMOUD) - Create App Error!
-      throw new AppError(`There is another plugin under name ${initData.name}`, 'PLUGIN_CONFLICT', false);
+      throw new AppError(`There is another plugin under name ${plugin.name}`, 'PLUGIN_CONFLICT', false);
     }
-    this.plugins.set(initData.name, plugin);
+    this.plugins.set(plugin.name, plugin);
   }
 
   public async executeCommand(commandString: string, ctx: EngineContext) {
     const commandData = this.prepareCommand(commandString);
+    if (commandData.plugin === 'core') {
+    }
     const plugin = this.plugins.get(commandData.plugin);
     if (!plugin) {
       throw new AppError(`Plugin "${commandData.plugin}" not found!`);
@@ -41,6 +51,15 @@ class Engine {
     }
     const args = command.validateArgs(commandData.args);
     return await command.exec(ctx, args);
+  }
+
+  public getPluginsNamesWithCommands(): { name: string; commands: string[] }[] {
+    const plugins: { name: string; commands: string[] }[] = [];
+    for (const plugin of this.plugins.values()) {
+      const commands: string[] = plugin.getCommands();
+      plugins.push({ name: plugin.name, commands: commands });
+    }
+    return plugins;
   }
 
   private async importDynamicPlugin(name: string): Promise<Plugin | null> {

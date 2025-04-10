@@ -1,10 +1,12 @@
+import HelpCommand from '../commands/help';
 import type { Command } from './command';
 
 type CommandConstructor = { new (...args: any): Command<any> };
 
 export abstract class Plugin {
-  protected abstract defaultCommand?: string;
-  abstract init(): PluginInitializer;
+  abstract name: string;
+  defaultCommand?: string;
+  abstract init(): void;
 
   protected commands = new Map<string, CommandConstructor>();
 
@@ -21,9 +23,15 @@ export abstract class Plugin {
     }
     return this.commands.get(name)!;
   }
+
+  public getCommands(): string[] {
+    return Array.from(this.commands.keys());
+  }
 }
 
-export interface PluginInitializer {
-  name: string;
-  defaultCommand?: string;
+export class CorePlugin extends Plugin {
+  public name = 'core';
+  public init(): void {
+    this.addCommand('help', HelpCommand);
+  }
 }

@@ -1,16 +1,14 @@
 import { z } from 'zod';
 import { Command, type Args } from '../../src/engine/command';
-import { Plugin, type PluginInitializer } from '../../src/engine/plugin';
+import { Plugin } from '../../src/engine/plugin';
 import type { EngineContext } from '../../src/engine/Context';
 
 class PcPlugin extends Plugin {
-  protected defaultCommand?: string | undefined = 'direct';
+  name: string = 'whatsapp';
+  defaultCommand?: string | undefined = 'direct';
 
-  init(): PluginInitializer {
+  init(): void {
     this.addCommand('direct', DirectMessage);
-    return {
-      name: 'whatsapp',
-    };
   }
 }
 

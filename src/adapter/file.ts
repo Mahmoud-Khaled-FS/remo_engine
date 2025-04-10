@@ -3,8 +3,10 @@ import AppError from '../utils/error';
 import { exit } from '../utils/exit';
 import { Adapter } from './adapter';
 import type { EngineContext } from '../engine/Context';
+import type Engine from '../engine';
 
 class FileContext implements EngineContext {
+  constructor(public readonly engine: Engine) {}
   async file(path: string, type?: string): Promise<void> {
     console.log(`file: ${path}`);
   }
@@ -27,7 +29,7 @@ class FileAdapter extends Adapter {
         exit(`invalid file! path:"${this.argv[0]}"`);
       }
       const commandFile = await Bun.file(this.argv[0]).text();
-      const engineCtx = new FileContext();
+      const engineCtx = new FileContext(this.engine);
       const output = await this.engine.executeCommand(commandFile, engineCtx);
       console.log(output);
     } catch (err) {

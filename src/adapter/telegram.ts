@@ -4,9 +4,10 @@ import { Adapter } from './adapter';
 import { error } from '../utils/logger';
 import type { EngineContext } from '../engine/Context';
 import Config from '../config';
+import type Engine from '../engine';
 
 class TelegramContext implements EngineContext {
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: Context, public readonly engine: Engine) {}
   async text(text: string): Promise<void> {
     await this.ctx.reply(text);
   }
@@ -50,7 +51,7 @@ class TelegramAdapter extends Adapter {
           const messageLines = message.split('\n');
           message = [messageLines[0], ctx.message.reply_to_message.text, ...messageLines.slice(1)].join('\n');
         }
-        const engineCtx = new TelegramContext(ctx);
+        const engineCtx = new TelegramContext(ctx, this.engine);
         await this.engine.executeCommand(message, engineCtx);
       } catch (err) {
         error((err as Error).message!);

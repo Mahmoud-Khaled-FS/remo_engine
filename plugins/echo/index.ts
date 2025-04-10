@@ -1,15 +1,13 @@
-import { Plugin, type PluginInitializer } from '../../src/engine/plugin';
+import { Plugin } from '../../src/engine/plugin';
 import { Command, type Args, type EngineArgument } from '../../src/engine/command';
 import { z } from 'zod';
 import type { EngineContext } from '../../src/engine/Context';
 
 class EchoPlugin extends Plugin {
   defaultCommand: string = 'print';
-  init(): PluginInitializer {
+  name: string = 'echo';
+  init(): void {
     this.addCommand('print', PrintCommand);
-    return {
-      name: 'echo',
-    };
   }
 }
 
