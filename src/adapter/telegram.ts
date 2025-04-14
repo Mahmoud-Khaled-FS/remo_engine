@@ -37,7 +37,7 @@ class TelegramAdapter extends Adapter {
     }
     const bot = new Bot(Config.TELEGRAM_BOT_TOKEN);
     bot.on('message:text', async (ctx) => {
-      let message = ctx.message.text.toLowerCase().trim();
+      let message = ctx.message.text.trim();
       if (!message || message.length < 1) return;
       if (message[0] === 'R') message = 'r' + message.slice(1);
       if (!message.startsWith('remo')) return;

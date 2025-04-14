@@ -16,6 +16,8 @@ async function main(argv: string[]) {
   await engine.registerPlugin('memes');
   await engine.registerPlugin('pc');
   await engine.registerPlugin('whatsapp');
+  await engine.registerPlugin('downloader');
+  await engine.registerPlugin('queue');
 
   let adapter: Adapter;
   switch (argv[2]) {

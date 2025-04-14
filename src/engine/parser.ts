@@ -47,10 +47,10 @@ class Parser {
     let isStartNamed = false;
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (line.includes('=') && !(line.startsWith('"') && line.endsWith('"'))) {
+      if (line.startsWith('.') && line.includes('=')) {
         isStartNamed = true;
         const words = line.split('=');
-        this.tokens.push({ type: TokenType.ARG_NAME, value: words[0] });
+        this.tokens.push({ type: TokenType.ARG_NAME, value: words[0].slice(1) });
         this.tokens.push({ type: TokenType.ARG_VALUE, value: words.slice(1).join('=') });
         continue;
       }
