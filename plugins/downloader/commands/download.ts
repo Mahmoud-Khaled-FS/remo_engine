@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { Command, type Args } from '../../../src/engine/command';
-import type { EngineContext } from '../../../src/engine/Context';
-import { exec } from '../../../src/utils/childProcess';
+import { Command, type Args } from '@src/engine/command';
+import type { EngineContext } from '@src/engine/Context';
+import { exec } from '@src/utils/childProcess';
 import { getPluginConfig } from '@src/config';
 
 class DownloadCommand extends Command<{ url: string }> {

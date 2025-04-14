@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { Command, type Args } from '../../src/engine/command';
-import { Plugin } from '../../src/engine/plugin';
-import type { EngineContext } from '../../src/engine/Context';
+import { Command, type Args } from '@src/engine/command';
+import { Plugin } from '@src/engine/plugin';
+import type { EngineContext } from '@src/engine/Context';
 
 class PcPlugin extends Plugin {
   name: string = 'whatsapp';

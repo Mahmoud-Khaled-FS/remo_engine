@@ -1,4 +1,4 @@
-import { Plugin } from '../../src/engine/plugin';
+import { Plugin } from '@src/engine/plugin';
 import InfoCommand from './commands/info';
 import ScreenshotCommand from './commands/screenshot';
 import ShutdownCommand from './commands/shutdown';

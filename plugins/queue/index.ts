@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { z } from 'zod';
-import { Command, type Args } from '../../src/engine/command';
-import type { EngineContext } from '../../src/engine/Context';
-import { Plugin } from '../../src/engine/plugin';
+import { Command, type Args } from '@src/engine/command';
+import type { EngineContext } from '@src/engine/Context';
+import { Plugin } from '@src/engine/plugin';
 
 // TODO (MAHMOUD) - move to database
 class QueuePlugin extends Plugin {

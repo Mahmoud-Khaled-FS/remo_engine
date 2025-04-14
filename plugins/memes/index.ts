@@ -1,6 +1,6 @@
-import { Plugin } from '../../src/engine/plugin';
-import { Command, type Args } from '../../src/engine/command';
-import type { EngineContext } from '../../src/engine/Context';
+import { Plugin } from '@src/engine/plugin';
+import { Command, type Args } from '@src/engine/command';
+import type { EngineContext } from '@src/engine/Context';
 
 class MemesPlugin extends Plugin {
   name: string = 'memes';

@@ -1,6 +1,6 @@
-import { Command } from '../../../src/engine/command';
-import type { EngineContext } from '../../../src/engine/Context';
-import { exec } from '../../../src/utils/childProcess';
+import { Command } from '@src/engine/command';
+import type { EngineContext } from '@src/engine/Context';
+import { exec } from '@src/utils/childProcess';
 
 class InfoCommand extends Command {
   async exec(ctx: EngineContext) {
