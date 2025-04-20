@@ -2,13 +2,19 @@ import { z } from 'zod';
 import { Command, type Args } from '@src/engine/command';
 import type { EngineContext } from '@src/engine/Context';
 import { exec } from '@src/utils/childProcess';
-import { getPluginConfig } from '@src/config';
+import config from '@src/config';
 
-class DownloadCommand extends Command<{ url: string }> {
+type DownloadArgs = {
+  url: string;
+  audioOnly?: string;
+  redirect?: string;
+};
+
+class DownloadCommand extends Command<DownloadArgs> {
   private readonly YT_PATH: string;
   constructor() {
     super();
-    this.YT_PATH = getPluginConfig('downloader').YT_PATH;
+    this.YT_PATH = config.getPluginConfig<{ ytPath: string }>('downloader').ytPath;
   }
   args: Args = [
     {
@@ -16,11 +22,27 @@ class DownloadCommand extends Command<{ url: string }> {
       validation: z.string().url(),
       description: 'The URL to download',
     },
+    {
+      name: 'audioOnly',
+      validation: z.enum(['true', 'false']).optional().default('false'),
+      description: 'Download only audio file',
+    },
+    {
+      name: 'redirect',
+      validation: z.enum(['true', 'false']).optional().default('false'),
+      description: 'Return back the file after download',
+    },
   ];
 
-  exec(ctx: EngineContext, args: { url: string }): void | Promise<void> {
+  async exec(ctx: EngineContext, args: DownloadArgs): Promise<void> {
     ctx.text('Downloading...');
-    exec(`${this.YT_PATH} -P ${process.cwd()} "${args.url}"`);
+    if (args.audioOnly === 'true') {
+      console.log(`${this.YT_PATH} -P ${process.cwd()} -x "${args.url}"`);
+      await exec(`${this.YT_PATH} -P ${process.cwd()} -x "${args.url}"`);
+    } else {
+      await exec(`${this.YT_PATH} -P ${process.cwd()} "${args.url}"`);
+    }
+    ctx.text('Done!');
   }
 }
 

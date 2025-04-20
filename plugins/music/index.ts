@@ -5,7 +5,6 @@ import SuggestMusicCommand from './commands/suggest_music';
 
 class MusicPlugin extends Plugin {
   init(): PluginInitializer {
-    info('Music plugin init!');
     this.addCommand('suggest music', new SuggestMusicCommand());
     this.addCommand('add playlist', new AddPlaylistCommand());
     return {
@@ -13,5 +12,3 @@ class MusicPlugin extends Plugin {
     };
   }
 }
-
-export default MusicPlugin;

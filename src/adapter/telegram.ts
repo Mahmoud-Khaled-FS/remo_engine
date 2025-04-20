@@ -5,6 +5,7 @@ import { error } from '../utils/logger';
 import type { EngineContext } from '../engine/Context';
 import Config from '../config';
 import type Engine from '../engine';
+import config from '../config';
 
 class TelegramContext implements EngineContext {
   constructor(private readonly ctx: Context, public readonly engine: Engine) {}
@@ -32,24 +33,26 @@ class TelegramContext implements EngineContext {
 
 class TelegramAdapter extends Adapter {
   run(): void | Promise<void> {
-    if (this.argv.length < 1) {
-      exit('There is no token!');
-    }
-    const bot = new Bot(Config.TELEGRAM_BOT_TOKEN);
+    const telegramConfig = config.getAdapterConfig<{ botToken: string; ownerId: number }>('telegram');
+    const bot = new Bot(telegramConfig.botToken);
     bot.on('message:text', async (ctx) => {
       let message = ctx.message.text.trim();
       if (!message || message.length < 1) return;
       if (message[0] === 'R') message = 'r' + message.slice(1);
       if (!message.startsWith('remo')) return;
       // TODO (MAHMOUD) - add authorization!
-      if (ctx.from.id !== Config.TELEGRAM_OWNER_ID) {
+      if (ctx.from.id !== telegramConfig.ownerId) {
         ctx.reply('Sorry, Only my owner can use me for now! 😔');
         return;
       }
       try {
         if (ctx.message.reply_to_message && ctx.message.reply_to_message.text) {
           const messageLines = message.split('\n');
-          message = [messageLines[0], ctx.message.reply_to_message.text, ...messageLines.slice(1)].join('\n');
+          if (messageLines.at(-1) === '#no_args') {
+            message = messageLines.slice(0, messageLines.length - 1).join('\n');
+          } else {
+            message = [messageLines[0], ctx.message.reply_to_message.text, ...messageLines.slice(1)].join('\n');
+          }
         }
         const engineCtx = new TelegramContext(ctx, this.engine);
         await this.engine.executeCommand(message, engineCtx);

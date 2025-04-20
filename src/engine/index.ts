@@ -1,6 +1,5 @@
 import { BOT_NAME } from '../constant';
-import { error, info } from '../utils/logger';
-import { trimList } from '../utils/strings';
+import { error, info, warn } from '../utils/logger';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { EngineArgument, Command, CommandData } from './command';
@@ -23,7 +22,13 @@ class Engine {
       plugin = await this.importDynamicPlugin(name);
     }
     if (!plugin) {
-      throw new AppError(`Can not import dynamic plugin ${plugin}`, 'PLUGIN_NOT_FOUND', false);
+      warn(`Plugin ${name} can not be loaded.`);
+      return;
+    }
+    const shouldLoad = await plugin.shouldLoad();
+    if (!shouldLoad) {
+      warn(`Plugin ${plugin.name} is not loaded!`);
+      return;
     }
     await plugin.init();
     if (this.plugins.has(plugin.name)) {
@@ -64,7 +69,7 @@ class Engine {
 
   private async importDynamicPlugin(name: string): Promise<Plugin | null> {
     try {
-      const pluginPath = path.join(__dirname, '..', '..', 'plugins', name);
+      const pluginPath = path.resolve(name);
       if (!fs.existsSync(pluginPath)) {
         return null;
       }
@@ -76,8 +81,10 @@ class Engine {
       if (!pluginFile) {
         return null;
       }
-      info(`[${name}] plugin init!`);
-      return new pluginFile.default();
+      const plugin = new pluginFile.default();
+      if (!(plugin instanceof Plugin)) return null;
+      info(`[${plugin.name}] plugin init!`);
+      return plugin;
     } catch (error) {
       return null;
     }

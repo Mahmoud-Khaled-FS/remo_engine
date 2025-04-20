@@ -27,6 +27,10 @@ export abstract class Plugin {
   public getCommands(): string[] {
     return Array.from(this.commands.keys());
   }
+
+  public shouldLoad(): boolean | Promise<boolean> {
+    return true;
+  }
 }
 
 export class CorePlugin extends Plugin {

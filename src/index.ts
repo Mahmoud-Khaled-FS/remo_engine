@@ -1,23 +1,37 @@
+import { readdirSync } from 'node:fs';
 import type { Adapter } from './adapter/adapter';
 import FileAdapter from './adapter/file';
 import TelegramAdapter from './adapter/telegram';
+import config from './config';
 import Engine from './engine';
 import { exit } from './utils/exit';
 import { error } from './utils/logger';
+import path from 'node:path';
+
+async function loadPlugins(engine: Engine) {
+  const pluginsDir = config.getKey('pluginsDir');
+  if (pluginsDir && Array.isArray(pluginsDir)) {
+    for (const dir of pluginsDir) {
+      const d = readdirSync(dir);
+      for (const plugin of d) {
+        const plugPath = path.resolve(dir, plugin);
+        await engine.registerPlugin(plugPath);
+      }
+    }
+  }
+}
 
 async function main(argv: string[]) {
+  await config.init('./config.json'); // TODO (MAHMOUD) - Parse command line argument!
+
   if (argv.length < 3) {
     exit('There is no command! Usage: remo run <file>');
   }
 
   // Easy to setup different plugins based on adapter
   const engine = new Engine();
-  await engine.registerPlugin('echo');
-  await engine.registerPlugin('memes');
-  await engine.registerPlugin('pc');
-  await engine.registerPlugin('whatsapp');
-  await engine.registerPlugin('downloader');
-  await engine.registerPlugin('queue');
+
+  await loadPlugins(engine);
 
   let adapter: Adapter;
   switch (argv[2]) {
