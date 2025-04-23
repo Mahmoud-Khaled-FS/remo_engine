@@ -4,21 +4,22 @@ import FileAdapter from './adapter/file';
 import TelegramAdapter from './adapter/telegram';
 import config from './config';
 import { exit } from './utils/exit';
-import { error } from './utils/logger';
 import path from 'node:path';
 import { Engine } from './engine/engine';
 
 async function loadPlugins(engine: Engine) {
   const pluginsDir = config.getKey('pluginsDir');
+  const pluginsRegister: any = [];
   if (pluginsDir && Array.isArray(pluginsDir)) {
     for (const dir of pluginsDir) {
       const d = readdirSync(dir);
       for (const plugin of d) {
         const plugPath = path.resolve(dir, plugin);
-        await engine.registerPlugin(plugPath);
+        pluginsRegister.push(engine.registerPlugin(plugPath));
       }
     }
   }
+  await Promise.all(pluginsRegister);
 }
 
 async function main(argv: string[]) {
@@ -47,8 +48,7 @@ async function main(argv: string[]) {
       break;
     }
     default: {
-      error('Unknown command! Usage: remo run <file>');
-      process.exit(1);
+      exit('Unknown command! Usage: remo run <file>');
     }
   }
 
