@@ -1,6 +1,6 @@
 import { Plugin } from '@src/engine/plugin';
 import { Command, type Args } from '@src/engine/command';
-import type { EngineContext } from '@src/engine/Context';
+import type Context from '@src/engine/Context';
 
 class MemesPlugin extends Plugin {
   name: string = 'memes';
@@ -15,7 +15,7 @@ export default MemesPlugin;
 
 class UrmomCommand extends Command {
   args: Args = [];
-  async exec(ctx: EngineContext) {
-    ctx.text('Urmom');
+  async exec(ctx: Context) {
+    ctx.io.text('Urmom');
   }
 }

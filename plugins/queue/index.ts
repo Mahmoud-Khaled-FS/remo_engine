@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
 import { z } from 'zod';
-import { Command, type Args } from '@src/engine/command';
-import type { EngineContext } from '@src/engine/Context';
+import { Command } from '@src/engine/command';
 import { Plugin } from '@src/engine/plugin';
 import { resolve } from 'node:path';
 import config from '@src/config';
+import type Context from '@src/engine/Context';
 
 // TODO (MAHMOUD) - move to database
 class QueuePlugin extends Plugin {
@@ -23,14 +23,14 @@ export default QueuePlugin;
 class FirstQueueCommand extends Command<{ name: string }> {
   args = [{ name: 'name', validation: z.string().default('default') }];
 
-  async exec(ctx: EngineContext, args: { name: string }) {
+  async exec(ctx: Context, args: { name: string }) {
     const path = resolve(config.getPluginConfig<{ savePath: string }>('queue').savePath, `${args.name}.json`);
     if (!existsSync(path)) {
-      await ctx.text('Queue is empty');
+      await ctx.io.text('Queue is empty');
       return;
     }
     const queue = await import(path);
-    await ctx.text(queue.default[0]);
+    await ctx.io.text(queue.default[0]);
   }
 }
 
@@ -39,7 +39,7 @@ class PushQueueCommand extends Command<{ name: string; value: string }> {
     { name: 'value', validation: z.string() },
     { name: 'name', validation: z.string().default('default') },
   ];
-  async exec(ctx: EngineContext, args: { name: string; value: string }) {
+  async exec(ctx: Context, args: { name: string; value: string }) {
     const path = resolve(config.getPluginConfig<{ savePath: string }>('queue').savePath, `${args.name}.json`);
     const file = Bun.file(path);
     const isExists = await file.exists();
@@ -51,13 +51,13 @@ class PushQueueCommand extends Command<{ name: string; value: string }> {
     } else {
       await Bun.write(path, JSON.stringify([args.value]));
     }
-    await ctx.text('Added to queue');
+    await ctx.io.text('Added to queue');
   }
 }
 
 class ShiftQueueCommand extends Command<{ name: string; value: string }> {
   args = [{ name: 'name', validation: z.string().default('default') }];
-  async exec(ctx: EngineContext, args: { name: string; value: string }) {
+  async exec(ctx: Context, args: { name: string; value: string }) {
     const path = resolve(config.getPluginConfig<{ savePath: string }>('queue').savePath, `${args.name}.json`);
     const file = Bun.file(path);
     const isExists = await file.exists();
@@ -67,21 +67,21 @@ class ShiftQueueCommand extends Command<{ name: string; value: string }> {
       await Bun.write(path, JSON.stringify(queue.default));
       return;
     }
-    await ctx.text('Queue is empty');
+    await ctx.io.text('Queue is empty');
   }
 }
 
 class lengthQueueCommand extends Command<{ name: string }> {
   args = [{ name: 'name', validation: z.string().default('default') }];
-  async exec(ctx: EngineContext, args: { name: string }) {
+  async exec(ctx: Context, args: { name: string }) {
     const path = resolve(config.getPluginConfig<{ savePath: string }>('queue').savePath, `${args.name}.json`);
     const file = Bun.file(path);
     const isExists = await file.exists();
     if (isExists) {
       const queue = await import(path);
-      await ctx.text(queue.default.length.toString());
+      await ctx.io.text(queue.default.length.toString());
       return;
     }
-    await ctx.text('Queue is empty');
+    await ctx.io.text('Queue is empty');
   }
 }

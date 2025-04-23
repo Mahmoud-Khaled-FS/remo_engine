@@ -2,11 +2,9 @@ import * as fs from 'node:fs';
 import AppError from '../utils/error';
 import { exit } from '../utils/exit';
 import { Adapter } from './adapter';
-import type { EngineContext } from '../engine/Context';
-import type Engine from '../engine';
+import type { AdapterIO } from '../engine/Context';
 
-class FileContext implements EngineContext {
-  constructor(public readonly engine: Engine) {}
+class FileIO implements AdapterIO {
   async file(path: string, type?: string): Promise<void> {
     console.log(`file: ${path}`);
   }
@@ -29,9 +27,8 @@ class FileAdapter extends Adapter {
         exit(`invalid file! path:"${this.argv[0]}"`);
       }
       const commandFile = await Bun.file(this.argv[0]).text();
-      const engineCtx = new FileContext(this.engine);
-      const output = await this.engine.executeCommand(commandFile, engineCtx);
-      console.log(output);
+      const fileIO = new FileIO();
+      await this.engine.executeCommand(commandFile, fileIO);
     } catch (err) {
       if (err instanceof AppError) {
         if (err.shouldLog || this.argv.includes('--debug')) {

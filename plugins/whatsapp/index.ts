@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Command, type Args } from '@src/engine/command';
 import { Plugin } from '@src/engine/plugin';
-import type { EngineContext } from '@src/engine/Context';
+import type Context from '@src/engine/Context';
 
 class PcPlugin extends Plugin {
   name: string = 'whatsapp';
@@ -20,10 +20,10 @@ class DirectMessage extends Command<{ number: string; message?: string }> {
     { name: 'message', description: 'Message', validation: z.string().optional() },
   ];
 
-  exec(ctx: EngineContext, args: { number: string; message?: string }) {
+  exec(ctx: Context, args: { number: string; message?: string }) {
     // NOTE (MAHMOUD) - Only available for Egyptian numbers
     const params = new URLSearchParams();
     params.set('text', args.message ?? '');
-    ctx.text(`https://wa.me/+2${args.number}?` + params.toString());
+    ctx.io.text(`https://wa.me/+2${args.number}?` + params.toString());
   }
 }

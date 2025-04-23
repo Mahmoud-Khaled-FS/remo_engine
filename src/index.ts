@@ -3,10 +3,10 @@ import type { Adapter } from './adapter/adapter';
 import FileAdapter from './adapter/file';
 import TelegramAdapter from './adapter/telegram';
 import config from './config';
-import Engine from './engine';
 import { exit } from './utils/exit';
 import { error } from './utils/logger';
 import path from 'node:path';
+import { Engine } from './engine/engine';
 
 async function loadPlugins(engine: Engine) {
   const pluginsDir = config.getKey('pluginsDir');

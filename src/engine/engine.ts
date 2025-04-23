@@ -1,14 +1,14 @@
 import { BOT_NAME } from '../constant';
-import { error, info, warn } from '../utils/logger';
+import { info, warn } from '../utils/logger';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { EngineArgument, Command, CommandData } from './command';
 import Parser, { TokenType } from './parser';
 import { CorePlugin, Plugin } from './plugin';
 import AppError from '../utils/error';
-import type { EngineContext } from './Context';
+import Context, { type AdapterIO } from './Context';
 
-class Engine {
+export class Engine {
   public constructor() {
     this.registerPlugin(new CorePlugin());
   }
@@ -38,7 +38,7 @@ class Engine {
     this.plugins.set(plugin.name, plugin);
   }
 
-  public async executeCommand(commandString: string, ctx: EngineContext) {
+  public async executeCommand(commandString: string, io: AdapterIO) {
     const commandData = this.prepareCommand(commandString);
     if (commandData.plugin === 'core') {
     }
@@ -55,7 +55,8 @@ class Engine {
       return this.printUsage(commandData, command.help());
     }
     const args = command.validateArgs(commandData.args);
-    return await command.exec(ctx, args);
+    const context = new Context(this, io);
+    return await command.exec(context, args);
   }
 
   public getPluginsNamesWithCommands(): { name: string; commands: string[] }[] {
@@ -125,5 +126,3 @@ class Engine {
     return `Usage: ${BOT_NAME} ${commandData.plugin} ${commandData.name}\n${argsHelper.join('\n')}`;
   }
 }
-
-export default Engine;

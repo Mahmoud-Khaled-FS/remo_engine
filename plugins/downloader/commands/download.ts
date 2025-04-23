@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { Command, type Args } from '@src/engine/command';
-import type { EngineContext } from '@src/engine/Context';
 import { exec } from '@src/utils/childProcess';
 import config from '@src/config';
+import type Context from '@src/engine/Context';
 
 type DownloadArgs = {
   url: string;
@@ -34,15 +34,15 @@ class DownloadCommand extends Command<DownloadArgs> {
     },
   ];
 
-  async exec(ctx: EngineContext, args: DownloadArgs): Promise<void> {
-    ctx.text('Downloading...');
+  async exec(ctx: Context, args: DownloadArgs): Promise<void> {
+    ctx.io.text('Downloading...');
     if (args.audioOnly === 'true') {
       console.log(`${this.YT_PATH} -P ${process.cwd()} -x "${args.url}"`);
       await exec(`${this.YT_PATH} -P ${process.cwd()} -x "${args.url}"`);
     } else {
       await exec(`${this.YT_PATH} -P ${process.cwd()} "${args.url}"`);
     }
-    ctx.text('Done!');
+    ctx.io.text('Done!');
   }
 }
 

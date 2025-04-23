@@ -2,13 +2,11 @@ import { Bot, Context, InputFile } from 'grammy';
 import { exit } from '../utils/exit';
 import { Adapter } from './adapter';
 import { error } from '../utils/logger';
-import type { EngineContext } from '../engine/Context';
-import Config from '../config';
-import type Engine from '../engine';
+import type { AdapterIO } from '../engine/Context';
 import config from '../config';
 
-class TelegramContext implements EngineContext {
-  constructor(private readonly ctx: Context, public readonly engine: Engine) {}
+class TelegramIO implements AdapterIO {
+  constructor(private readonly ctx: Context) {}
   async text(text: string): Promise<void> {
     await this.ctx.reply(text);
   }
@@ -54,8 +52,8 @@ class TelegramAdapter extends Adapter {
             message = [messageLines[0], ctx.message.reply_to_message.text, ...messageLines.slice(1)].join('\n');
           }
         }
-        const engineCtx = new TelegramContext(ctx, this.engine);
-        await this.engine.executeCommand(message, engineCtx);
+        const telegramIO = new TelegramIO(ctx);
+        await this.engine.executeCommand(message, telegramIO);
       } catch (err) {
         error((err as Error).message!);
       }

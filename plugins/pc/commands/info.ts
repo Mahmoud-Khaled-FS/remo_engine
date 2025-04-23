@@ -1,9 +1,9 @@
 import { Command } from '@src/engine/command';
-import type { EngineContext } from '@src/engine/Context';
+import type Context from '@src/engine/Context';
 import { exec } from '@src/utils/childProcess';
 
 class InfoCommand extends Command {
-  async exec(ctx: EngineContext) {
+  async exec(ctx: Context) {
     const { stdout } = await exec('systeminfo');
     const lines = stdout
       .split('\n')
@@ -19,7 +19,7 @@ class InfoCommand extends Command {
       'Time Zone: ' + info['Time Zone'],
       `RAM: ${info['Available Physical Memory']}/${info['Total Physical Memory']}`,
     ];
-    ctx.text(result.join('\n'));
+    ctx.io.text(result.join('\n'));
   }
 }
 
