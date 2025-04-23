@@ -35,7 +35,7 @@ async function main(argv: string[]) {
 
   let adapter: Adapter;
   switch (argv[2]) {
-    case 'run': {
+    case 'file': {
       if (argv.length < 4) {
         exit('There is no remo file to execute!');
       }
