@@ -17,7 +17,7 @@ class FileIO implements AdapterIO {
 class FileAdapter extends Adapter {
   async run(): Promise<void> {
     try {
-      if (process.argv.length < 3) {
+      if (this.argv.length <= 0) {
         exit('There is no remo file to execute!');
       }
       if (!fs.existsSync(this.argv[0])) {
