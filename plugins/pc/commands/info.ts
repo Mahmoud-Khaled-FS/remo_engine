@@ -1,9 +1,24 @@
+import os from "node:os";
+
 import { Command } from '@src/engine/command';
 import type Context from '@src/engine/Context';
 import { exec } from '@src/utils/childProcess';
 
 class InfoCommand extends Command {
   async exec(ctx: Context) {
+    let result = 'Unsported os!';
+    switch (os.platform()){
+      case 'win32': 
+        result = await this.windowsInfo();
+        break;
+      case 'linux':
+        result = await this.linuxInfo();
+        break;
+    }
+    ctx.io.text(result);
+  }
+
+  private async windowsInfo() {
     const { stdout } = await exec('systeminfo');
     const lines = stdout
       .split('\n')
@@ -19,7 +34,12 @@ class InfoCommand extends Command {
       'Time Zone: ' + info['Time Zone'],
       `RAM: ${info['Available Physical Memory']}/${info['Total Physical Memory']}`,
     ];
-    ctx.io.text(result.join('\n'));
+    return result.join('\n');
+  }
+
+  private async linuxInfo() {
+  const { stdout } = await exec('uname -a');
+  return `OS Info: ${stdout.trim()}`;
   }
 }
 
